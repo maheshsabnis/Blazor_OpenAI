@@ -1,0 +1,48 @@
+﻿@page "/qna"
+@rendermode InteractiveServer
+@using Blazor_OpenAI.Services
+@inject QnAServiceClient qnaService
+ 
+
+<h3>Ask Me Your Question</h3>
+
+<div class="container alert alert-warning">
+    <label for="question">Enter your question:</label>
+    <InputText @bind-Value="question" class="form-control"/>
+    <br/>
+    <br/>
+
+    @if (!string.IsNullOrEmpty(answer))
+    {
+        <h6>Your Answer</h6>
+        <div class="container alert alert-light overflow-auto">
+             
+            @answer
+             
+        </div>
+    }
+
+    <div class="btn-group-lg alert-warning">
+        <button class="btn btn-danger"  @onclick="@clear">Clear</button>
+        <button class="btn btn-success" @onclick="@getAnswer">Get Answer</button>
+    </div>
+</div>
+
+
+
+
+@code {
+    private string question = string.Empty;
+    private string answer = string.Empty;
+
+    private void clear()
+    {
+        question = string.Empty;
+        answer = string.Empty;
+    }
+    private async Task getAnswer()
+    {
+        answer = await qnaService.GetMyAnswersAsync(question);
+    }
+
+}
